@@ -1,6 +1,7 @@
 package tests;
 
 import base.BaseTest;
+import model.Customer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.CartPage;
@@ -14,9 +15,12 @@ public class CheckoutTest extends BaseTest {
     @Test
     public void completeCheckoutTest() {
         String expectedProductName = "Sauce Labs Backpack";
-        String firstName = "Alex";
-        String lastName = "Tester";
-        String postalCode = "00-001";
+
+        Customer customer = new Customer(
+                "Alex",
+                "Tester",
+                "00-001"
+        );
 
         ProductsPage productsPage = login();
 
@@ -44,11 +48,7 @@ public class CheckoutTest extends BaseTest {
         CheckoutInformationPage informationPage = cartPage.checkout();
 
         CheckoutOverviewPage overviewPage =
-                informationPage.fillCustomerInformation(
-                        firstName,
-                        lastName,
-                        postalCode
-                );
+                informationPage.fillCustomerInformation(customer);
 
         Assert.assertTrue(
                 overviewPage.isOpened(),

@@ -4,26 +4,46 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-public class ConfigReader {
+public final class ConfigReader {
 
     private static final Properties properties = new Properties();
 
     static {
-        try (InputStream input = ConfigReader.class.getClassLoader()
-                .getResourceAsStream("config.properties")) {
+        String environment = System.getProperty("env", "test");
+        String fileName = "config-" + environment + ".properties";
+
+        try (InputStream input = ConfigReader.class
+                .getClassLoader()
+                .getResourceAsStream(fileName)) {
 
             if (input == null) {
-                throw new RuntimeException("config.properties not found");
+                throw new RuntimeException(
+                        "Configuration file not found: " + fileName
+                );
             }
 
             properties.load(input);
 
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException(
+                    "Failed to load configuration file: " + fileName,
+                    e
+            );
         }
     }
 
+    private ConfigReader() {
+    }
+
     public static String get(String key) {
-        return properties.getProperty(key);
+        String value = properties.getProperty(key);
+
+        if (value == null) {
+            throw new RuntimeException(
+                    "Property not found: " + key
+            );
+        }
+
+        return value;
     }
 }

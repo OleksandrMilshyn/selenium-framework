@@ -31,11 +31,15 @@ public class CheckoutOverviewPage extends AbstractPage {
     }
 
     public String getProductName() {
+        logger.info("ACTION: Get product name from checkout overview");
+
         wait.until(ExpectedConditions.visibilityOf(productName));
         return productName.getText();
     }
 
     public CheckoutCompletePage finishOrder() {
+        logger.info("ACTION: Finish order");
+
         click(finishButton);
         return new CheckoutCompletePage(driver);
     }

@@ -1,8 +1,9 @@
 package base;
 
+import driver.DriverFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import pages.LoginPage;
@@ -10,41 +11,40 @@ import pages.ProductsPage;
 import utils.ConfigReader;
 
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
 
 public class BaseTest {
+
+    protected final Logger logger = LogManager.getLogger(getClass());
 
     protected WebDriver driver;
 
     @BeforeMethod
     public void setUp() {
-        ChromeOptions options = new ChromeOptions();
+        String browser = System.getProperty("browser", "chrome");
+        String environment = System.getProperty("env", "test");
 
-        options.addArguments("--start-maximized");
-        options.addArguments(
-                "--disable-features=PasswordLeakDetection,PasswordManagerOnboarding"
+        logger.info(
+                "ACTION: Starting test. Browser: {}, environment: {}",
+                browser,
+                environment
         );
-        options.addArguments("--disable-save-password-bubble");
 
-        Map<String, Object> preferences = new HashMap<>();
-        preferences.put("credentials_enable_service", false);
-        preferences.put("profile.password_manager_enabled", false);
-        preferences.put("profile.password_manager_leak_detection", false);
-
-        options.setExperimentalOption("prefs", preferences);
-
-        driver = new ChromeDriver(options);
+        driver = DriverFactory.createDriver();
 
         driver.manage()
                 .timeouts()
                 .implicitlyWait(Duration.ofSeconds(3));
+
+        logger.debug("WebDriver was created successfully");
     }
 
     protected ProductsPage login() {
-        LoginPage loginPage = new LoginPage(driver);
+        logger.info("ACTION: Opening login page");
 
+        LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
+
+        logger.info("ACTION: Logging in with configured credentials");
 
         return loginPage.loginWithCredentials(
                 ConfigReader.get("username"),
@@ -55,7 +55,12 @@ public class BaseTest {
     @AfterMethod
     public void tearDown() {
         if (driver != null) {
+            logger.info("ACTION: Closing browser");
             driver.quit();
         }
+    }
+
+    public WebDriver getDriver() {
+        return driver;
     }
 }

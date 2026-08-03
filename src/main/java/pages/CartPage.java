@@ -36,21 +36,29 @@ public class CartPage extends AbstractPage {
     }
 
     public String getProductName() {
+        logger.info("ACTION: Get product name from cart");
+
         wait.until(driver -> !productNames.isEmpty());
         return productNames.get(0).getText();
     }
 
     public CheckoutInformationPage checkout() {
+        logger.info("ACTION: Proceed to checkout");
+
         click(checkoutButton);
         return new CheckoutInformationPage(driver);
     }
 
     public void removeProduct() {
+        logger.info("ACTION: Remove product from cart");
+
         click(removeButton);
         wait.until(driver -> productNames.isEmpty());
     }
 
     public boolean isCartEmpty() {
+        logger.info("ACTION: Verify cart is empty");
+
         return productNames.isEmpty();
     }
 }

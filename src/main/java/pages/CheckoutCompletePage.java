@@ -31,6 +31,8 @@ public class CheckoutCompletePage extends AbstractPage {
     }
 
     public String getCompleteMessage() {
+        logger.info("ACTION: Read order completion message");
+
         return completeHeader.getText();
     }
 }

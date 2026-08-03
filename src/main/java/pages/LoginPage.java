@@ -22,10 +22,13 @@ public class LoginPage extends AbstractPage {
     }
 
     public void open() {
+        logger.info("ACTION: Open login page");
         driver.get(ConfigReader.get("base.url"));
     }
 
     public ProductsPage loginWithCredentials(String username, String password) {
+        logger.info("ACTION: Login with user credentials");
+
         type(usernameInput, username);
         type(passwordInput, password);
         click(loginButton);

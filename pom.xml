@@ -8,7 +8,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>com.epam</groupId>
-    <artifactId>webdriver-testng-practice</artifactId>
+    <artifactId>selenium-framework</artifactId>
     <version>1.0-SNAPSHOT</version>
 
     <properties>
@@ -18,6 +18,13 @@
 
         <selenium.version>4.46.0</selenium.version>
         <testng.version>7.12.0</testng.version>
+        <webdrivermanager.version>6.3.4</webdrivermanager.version>
+        <log4j.version>2.25.4</log4j.version>
+        <surefire.version>3.5.6</surefire.version>
+
+        <browser>chrome</browser>
+        <env>test</env>
+        <suiteXmlFile>src/test/resources/suites/regression.xml</suiteXmlFile>
     </properties>
 
     <dependencies>
@@ -29,12 +36,53 @@
         </dependency>
 
         <dependency>
+            <groupId>io.github.bonigarcia</groupId>
+            <artifactId>webdrivermanager</artifactId>
+            <version>${webdrivermanager.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>org.testng</groupId>
             <artifactId>testng</artifactId>
             <version>${testng.version}</version>
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-api</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j-core</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+
     </dependencies>
+
+    <build>
+        <plugins>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${surefire.version}</version>
+
+                <configuration>
+                    <suiteXmlFiles>
+                        <suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
+                    </suiteXmlFiles>
+
+                    <systemPropertyVariables>
+                        <browser>${browser}</browser>
+                        <env>${env}</env>
+                    </systemPropertyVariables>
+                </configuration>
+            </plugin>
+
+        </plugins>
+    </build>
 
 </project>

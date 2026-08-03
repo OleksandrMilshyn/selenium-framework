@@ -1,6 +1,7 @@
 package pages;
 
 import base.AbstractPage;
+import model.Customer;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -28,14 +29,12 @@ public class CheckoutInformationPage extends AbstractPage {
         );
     }
 
-    public CheckoutOverviewPage fillCustomerInformation(
-            String firstName,
-            String lastName,
-            String postalCode
-    ) {
-        type(firstNameInput, firstName);
-        type(lastNameInput, lastName);
-        type(postalCodeInput, postalCode);
+    public CheckoutOverviewPage fillCustomerInformation(Customer customer) {
+        logger.info("ACTION: Fill customer information");
+
+        type(firstNameInput, customer.getFirstName());
+        type(lastNameInput, customer.getLastName());
+        type(postalCodeInput, customer.getPostalCode());
         click(continueButton);
 
         return new CheckoutOverviewPage(driver);

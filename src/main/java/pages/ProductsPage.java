@@ -45,10 +45,12 @@ public class ProductsPage extends AbstractPage {
     }
 
     public void addBackpackToCart() {
+        logger.info("ACTION: Add Backpack to cart");
         click(addBackpackButton);
     }
 
     public void addFirstProductToCart() {
+        logger.info("ACTION: Add first product to cart");
         click(addToCartButtons.get(0));
     }
 
@@ -59,11 +61,14 @@ public class ProductsPage extends AbstractPage {
     }
 
     public CartPage openCart() {
+        logger.info("ACTION: Open shopping cart");
         click(cartLink);
         return new CartPage(driver);
     }
 
     public void sortByPriceLowToHigh() {
+        logger.info("ACTION: Sort products by price (Low to High)");
+
         Select select = new Select(sortDropdown);
         select.selectByValue("lohi");
 
@@ -77,6 +82,8 @@ public class ProductsPage extends AbstractPage {
     }
 
     public List<Double> getProductPrices() {
+        logger.info("ACTION: Read product prices");
+
         return productPrices.stream()
                 .map(WebElement::getText)
                 .map(price -> price.replace("$", ""))

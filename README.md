@@ -10,10 +10,9 @@ UI test automation framework developed with Selenium WebDriver, Java and TestNG.
 - WebDriverManager
 - TestNG
 - Log4j2
+- GitHub Actions
 - Page Object Model (POM)
 - Page Factory
-
----
 
 ## Project Structure
 
@@ -27,21 +26,19 @@ src
 │   │   ├── pages
 │   │   └── utils
 │   └── resources
-│       ├── config-dev.properties
-│       └── config-test.properties
 │
 └── test
     ├── java
     │   ├── listeners
     │   └── tests
     └── resources
+        ├── config-dev.properties
+        ├── config-test.properties
         ├── log4j2.xml
         └── suites
             ├── smoke.xml
             └── regression.xml
 ```
-
----
 
 ## Automated Test Scenarios
 
@@ -67,43 +64,39 @@ src
 ### Product Sorting Test
 
 - Login
-- Sort products by price (Low to High)
+- Sort products by Price (Low to High)
 - Verify sorting order
 - Add the cheapest product to the cart
 - Remove the product
 - Verify the cart is empty
 
----
-
 ## Implemented Features
 
 - WebDriverManager
 - Driver Factory
-- Page Object Model
+- Page Object Model (POM)
 - Page Factory
 - Abstract Page
 - Business Object (Customer)
-- Explicit Waits
-- Implicit Waits
+- Explicit and Implicit Waits
 - Multiple locator strategies (`id`, `className`, `css`)
 - Multi-browser support (Chrome, Firefox)
-- Multiple environments (dev, test)
+- Multiple environments (`dev`, `test`)
 - Smoke and Regression TestNG suites
-- Log4j2 logging
-- Screenshot capturing on test failure
 - TestNG Listener
-
----
+- Screenshot capture on test failure
+- Log4j2 logging
+- GitHub Actions CI workflow
 
 ## Running Tests
 
-Run Regression suite:
+Run all regression tests:
 
 ```bash
 mvn test
 ```
 
-or
+Run Regression suite:
 
 ```bash
 mvn test "-DsuiteXmlFile=src/test/resources/suites/regression.xml"
@@ -115,49 +108,59 @@ Run Smoke suite:
 mvn test "-DsuiteXmlFile=src/test/resources/suites/smoke.xml"
 ```
 
-Run tests in Chrome:
+Run in Chrome:
 
 ```bash
 mvn test "-Dbrowser=chrome"
 ```
 
-Run tests in Firefox:
+Run in Firefox:
 
 ```bash
 mvn test "-Dbrowser=firefox"
 ```
 
-Run tests for TEST environment:
+Run using TEST environment:
 
 ```bash
 mvn test "-Denv=test"
 ```
 
-Run tests for DEV environment:
+Run using DEV environment:
 
 ```bash
 mvn test "-Denv=dev"
 ```
 
----
+Run in headless mode:
+
+```bash
+mvn test "-Dheadless=true"
+```
 
 ## Logging
+
+The framework provides:
 
 - Console logging
 - Daily rolling log files
 - Multiple log levels (`DEBUG`, `INFO`, `WARN`, `ERROR`)
-- Screenshot path is logged when a test fails
-
----
+- Screenshot path logging for failed tests
 
 ## Screenshots
 
-On test failure, screenshots are automatically saved to:
+On test failure screenshots are automatically saved to:
 
 ```
 target/screenshots
 ```
 
-The screenshot location is written to the application log.
+## Continuous Integration
 
----
+The project includes a GitHub Actions workflow that:
+
+- Builds the project
+- Runs the Regression test suite
+- Publishes test reports
+- Uploads logs as artifacts
+- Uploads failure screenshots as artifacts

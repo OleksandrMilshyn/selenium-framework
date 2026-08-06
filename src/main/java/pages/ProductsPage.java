@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import utils.Constants;
 
 import java.util.List;
 
@@ -36,11 +37,8 @@ public class ProductsPage extends AbstractPage {
         super(driver);
     }
 
-    public String getPageTitle() {
-        return pageTitle.getText();
-    }
-
     public boolean isOpened() {
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
         return pageTitle.isDisplayed();
     }
 
@@ -51,13 +49,13 @@ public class ProductsPage extends AbstractPage {
 
     public void addFirstProductToCart() {
         logger.info("ACTION: Add first product to cart");
-        click(addToCartButtons.get(0));
+        click(addToCartButtons.get(Constants.FIRST_ELEMENT));
     }
 
-    public String getCartItemsCount() {
-        return wait.until(
-                ExpectedConditions.visibilityOf(cartBadge)
-        ).getText();
+    public int getCartItemsCount() {
+        return Integer.parseInt(
+                wait.until(ExpectedConditions.visibilityOf(cartBadge)).getText()
+        );
     }
 
     public CartPage openCart() {
@@ -70,15 +68,12 @@ public class ProductsPage extends AbstractPage {
         logger.info("ACTION: Sort products by price (Low to High)");
 
         Select select = new Select(sortDropdown);
-        select.selectByValue("lohi");
+        select.selectByValue(Constants.SORT_LOW_TO_HIGH);
 
-        wait.until(
-                ExpectedConditions.attributeToBe(
-                        sortDropdown,
-                        "value",
-                        "lohi"
-                )
-        );
+        wait.until(ExpectedConditions.attributeToBe(
+                sortDropdown,
+                "value",
+                Constants.SORT_LOW_TO_HIGH));
     }
 
     public List<Double> getProductPrices() {
@@ -86,7 +81,7 @@ public class ProductsPage extends AbstractPage {
 
         return productPrices.stream()
                 .map(WebElement::getText)
-                .map(price -> price.replace("$", ""))
+                .map(price -> price.replace(Constants.CURRENCY_SYMBOL, Constants.EMPTY_STRING))
                 .map(Double::parseDouble)
                 .toList();
     }

@@ -8,7 +8,14 @@ public final class ConfigReader {
 
     private static final Properties properties = new Properties();
 
-    static {
+    private ConfigReader() {
+    }
+
+    private static void loadProperties() {
+        if (!properties.isEmpty()) {
+            return;
+        }
+
         String environment = System.getProperty("env", "test");
         String fileName = "config-" + environment + ".properties";
 
@@ -32,16 +39,13 @@ public final class ConfigReader {
         }
     }
 
-    private ConfigReader() {
-    }
-
     public static String get(String key) {
+        loadProperties();
+
         String value = properties.getProperty(key);
 
         if (value == null) {
-            throw new RuntimeException(
-                    "Property not found: " + key
-            );
+            throw new RuntimeException("Property not found: " + key);
         }
 
         return value;

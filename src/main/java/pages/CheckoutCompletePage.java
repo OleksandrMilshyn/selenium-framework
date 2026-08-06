@@ -23,6 +23,7 @@ public class CheckoutCompletePage extends AbstractPage {
     }
 
     public boolean isOpened() {
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
         return pageTitle.isDisplayed();
     }
 

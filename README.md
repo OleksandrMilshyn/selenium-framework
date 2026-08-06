@@ -9,6 +9,7 @@ UI test automation framework developed with Selenium WebDriver, Java and TestNG.
 - Selenium WebDriver 4
 - WebDriverManager
 - TestNG
+- Lombok
 - Log4j2
 - GitHub Actions
 - Page Object Model (POM)
@@ -29,12 +30,15 @@ src
 │
 └── test
     ├── java
+    │   ├── base
+    │   ├── data
     │   ├── listeners
     │   └── tests
     └── resources
         ├── config-dev.properties
         ├── config-test.properties
         ├── log4j2.xml
+        ├── testng.xml
         └── suites
             ├── smoke.xml
             └── regression.xml
@@ -78,10 +82,12 @@ src
 - Page Factory
 - Abstract Page
 - Business Object (Customer)
-- Explicit and Implicit Waits
+- Explicit Wait
 - Multiple locator strategies (`id`, `className`, `css`)
 - Multi-browser support (Chrome, Firefox)
 - Multiple environments (`dev`, `test`)
+- Parallel test execution (TestNG + ThreadLocal WebDriver)
+- Lombok
 - Smoke and Regression TestNG suites
 - TestNG Listener
 - Screenshot capture on test failure

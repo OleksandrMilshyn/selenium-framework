@@ -4,7 +4,7 @@ import base.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.CartPage;
-import pages.ProductsPage;
+import utils.Constants;
 
 import java.util.List;
 
@@ -12,9 +12,6 @@ public class ProductSortingTest extends BaseTest {
 
     @Test
     public void sortProductsAndRemoveItemTest() {
-        String expectedProductName = "Sauce Labs Onesie";
-
-        ProductsPage productsPage = login();
 
         Assert.assertTrue(
                 productsPage.isOpened(),
@@ -39,7 +36,7 @@ public class ProductSortingTest extends BaseTest {
 
         Assert.assertEquals(
                 productsPage.getCartItemsCount(),
-                "1",
+                1,
                 "Cart should contain one product"
         );
 
@@ -47,7 +44,7 @@ public class ProductSortingTest extends BaseTest {
 
         Assert.assertEquals(
                 cartPage.getProductName(),
-                expectedProductName,
+                Constants.ONESIE_NAME,
                 "The cheapest product should be added to the cart"
         );
 

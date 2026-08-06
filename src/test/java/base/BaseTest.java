@@ -10,17 +10,19 @@ import pages.LoginPage;
 import pages.ProductsPage;
 import utils.ConfigReader;
 
-import java.time.Duration;
-
 public class BaseTest {
 
     protected final Logger logger = LogManager.getLogger(getClass());
 
     protected WebDriver driver;
+    protected ProductsPage productsPage;
 
     @BeforeMethod
-    public void setUp() {
-        String browser = System.getProperty("browser", "chrome");
+    public void setUpAndLogin() {
+        String browser = System.getProperty(
+                "browser",
+                ConfigReader.get("browser")
+        );
         String environment = System.getProperty("env", "test");
 
         logger.info(
@@ -29,24 +31,17 @@ public class BaseTest {
                 environment
         );
 
-        driver = DriverFactory.createDriver();
+        DriverFactory.createDriver();
+        driver = DriverFactory.getDriver();
 
-        driver.manage()
-                .timeouts()
-                .implicitlyWait(Duration.ofSeconds(3));
-
-        logger.debug("WebDriver was created successfully");
-    }
-
-    protected ProductsPage login() {
-        logger.info("ACTION: Opening login page");
+        logger.info("WebDriver was created successfully");
 
         LoginPage loginPage = new LoginPage(driver);
         loginPage.open();
 
         logger.info("ACTION: Logging in with configured credentials");
 
-        return loginPage.loginWithCredentials(
+        productsPage = loginPage.loginWithCredentials(
                 ConfigReader.get("username"),
                 ConfigReader.get("password")
         );
@@ -54,13 +49,13 @@ public class BaseTest {
 
     @AfterMethod
     public void tearDown() {
-        if (driver != null) {
+        if (DriverFactory.getDriver() != null) {
             logger.info("ACTION: Closing browser");
-            driver.quit();
+            DriverFactory.quitDriver();
         }
     }
 
     public WebDriver getDriver() {
-        return driver;
+        return DriverFactory.getDriver();
     }
 }

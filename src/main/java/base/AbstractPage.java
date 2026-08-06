@@ -7,6 +7,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.ConfigReader;
 
 import java.time.Duration;
 
@@ -19,11 +20,16 @@ public abstract class AbstractPage {
 
     public AbstractPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(
+                driver,
+                Duration.ofSeconds(
+                        Integer.parseInt(
+                                ConfigReader.get("explicit.wait")
+                        )
+                )
+        );
 
         PageFactory.initElements(driver, this);
-
-        logger.debug("Page Object initialized: {}", getClass().getSimpleName());
     }
 
     protected void type(WebElement element, String text) {

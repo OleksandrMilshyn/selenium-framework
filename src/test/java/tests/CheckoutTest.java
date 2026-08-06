@@ -1,6 +1,7 @@
 package tests;
 
 import base.BaseTest;
+import data.TestDataFactory;
 import model.Customer;
 import org.testng.Assert;
 import org.testng.annotations.Test;
@@ -8,21 +9,12 @@ import pages.CartPage;
 import pages.CheckoutCompletePage;
 import pages.CheckoutInformationPage;
 import pages.CheckoutOverviewPage;
-import pages.ProductsPage;
+import utils.Constants;
 
 public class CheckoutTest extends BaseTest {
 
     @Test
     public void completeCheckoutTest() {
-        String expectedProductName = "Sauce Labs Backpack";
-
-        Customer customer = new Customer(
-                "Alex",
-                "Tester",
-                "00-001"
-        );
-
-        ProductsPage productsPage = login();
 
         Assert.assertTrue(
                 productsPage.isOpened(),
@@ -33,7 +25,7 @@ public class CheckoutTest extends BaseTest {
 
         Assert.assertEquals(
                 productsPage.getCartItemsCount(),
-                "1",
+                1,
                 "Cart should contain one product"
         );
 
@@ -41,14 +33,16 @@ public class CheckoutTest extends BaseTest {
 
         Assert.assertEquals(
                 cartPage.getProductName(),
-                expectedProductName,
+                Constants.BACKPACK_NAME,
                 "Unexpected product in the cart"
         );
 
         CheckoutInformationPage informationPage = cartPage.checkout();
 
         CheckoutOverviewPage overviewPage =
-                informationPage.fillCustomerInformation(customer);
+                informationPage.fillCustomerInformation(
+                        TestDataFactory.validCustomer()
+                );
 
         Assert.assertTrue(
                 overviewPage.isOpened(),
@@ -57,13 +51,13 @@ public class CheckoutTest extends BaseTest {
 
         Assert.assertEquals(
                 overviewPage.getPageTitle(),
-                "Checkout: Overview",
+                Constants.CHECKOUT_OVERVIEW_TITLE,
                 "Unexpected checkout overview page title"
         );
 
         Assert.assertEquals(
                 overviewPage.getProductName(),
-                expectedProductName,
+                Constants.BACKPACK_NAME,
                 "Unexpected product on checkout overview page"
         );
 
@@ -76,13 +70,13 @@ public class CheckoutTest extends BaseTest {
 
         Assert.assertEquals(
                 completePage.getPageTitle(),
-                "Checkout: Complete!",
+                Constants.CHECKOUT_COMPLETE_TITLE,
                 "Unexpected checkout complete page title"
         );
 
         Assert.assertEquals(
                 completePage.getCompleteMessage(),
-                "Thank you for your order!",
+                Constants.ORDER_COMPLETE_MESSAGE,
                 "Unexpected order completion message"
         );
     }

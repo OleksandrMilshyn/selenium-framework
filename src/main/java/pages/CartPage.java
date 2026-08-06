@@ -1,6 +1,7 @@
 package pages;
 
 import base.AbstractPage;
+import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -9,6 +10,8 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import java.util.List;
 
 public class CartPage extends AbstractPage {
+
+    private static final int FIRST_ELEMENT = 0;
 
     @FindBy(className = "title")
     private WebElement pageTitle;
@@ -38,8 +41,10 @@ public class CartPage extends AbstractPage {
     public String getProductName() {
         logger.info("ACTION: Get product name from cart");
 
-        wait.until(driver -> !productNames.isEmpty());
-        return productNames.get(0).getText();
+        wait.until(
+                ExpectedConditions.visibilityOfAllElements(productNames)
+        );
+        return productNames.get(FIRST_ELEMENT).getText();
     }
 
     public CheckoutInformationPage checkout() {
@@ -53,7 +58,12 @@ public class CartPage extends AbstractPage {
         logger.info("ACTION: Remove product from cart");
 
         click(removeButton);
-        wait.until(driver -> productNames.isEmpty());
+        wait.until(
+                ExpectedConditions.numberOfElementsToBe(
+                        By.className("inventory_item_name"),
+                        0
+                )
+        );
     }
 
     public boolean isCartEmpty() {

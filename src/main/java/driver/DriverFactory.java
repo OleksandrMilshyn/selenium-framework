@@ -12,20 +12,37 @@ import java.util.Map;
 
 public final class DriverFactory {
 
+    private static final ThreadLocal<WebDriver> DRIVER = new ThreadLocal<>();
+
     private DriverFactory() {
     }
 
-    public static WebDriver createDriver() {
+    public static void createDriver() {
         String browser = System.getProperty("browser", "chrome")
                 .toLowerCase();
 
-        return switch (browser) {
+        WebDriver driver = switch (browser) {
             case "chrome" -> createChromeDriver();
             case "firefox" -> createFirefoxDriver();
             default -> throw new IllegalArgumentException(
                     "Unsupported browser: " + browser
             );
         };
+
+        DRIVER.set(driver);
+    }
+
+    public static WebDriver getDriver() {
+        return DRIVER.get();
+    }
+
+    public static void quitDriver() {
+        WebDriver driver = DRIVER.get();
+
+        if (driver != null) {
+            driver.quit();
+            DRIVER.remove();
+        }
     }
 
     private static WebDriver createChromeDriver() {

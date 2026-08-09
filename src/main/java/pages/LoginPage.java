@@ -4,7 +4,7 @@ import base.AbstractPage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
-import utils.ConfigReader;
+import utils.ConfigurationManager;
 
 public class LoginPage extends AbstractPage {
 
@@ -23,7 +23,9 @@ public class LoginPage extends AbstractPage {
 
     public void open() {
         logger.info("ACTION: Open login page");
-        driver.get(ConfigReader.get("base.url"));
+        driver.get(
+                ConfigurationManager.getInstance().get("base.url")
+        );
     }
 
     public ProductsPage loginWithCredentials(String username, String password) {

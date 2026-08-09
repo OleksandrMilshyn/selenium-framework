@@ -6,9 +6,8 @@ import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import pages.LoginPage;
 import pages.ProductsPage;
-import utils.ConfigReader;
+import service.AuthenticationService;
 
 public class BaseTest {
 
@@ -21,9 +20,13 @@ public class BaseTest {
     public void setUpAndLogin() {
         String browser = System.getProperty(
                 "browser",
-                ConfigReader.get("browser")
+                "chrome"
         );
-        String environment = System.getProperty("env", "test");
+
+        String environment = System.getProperty(
+                "env",
+                "test"
+        );
 
         logger.info(
                 "ACTION: Starting test. Browser: {}, environment: {}",
@@ -36,15 +39,12 @@ public class BaseTest {
 
         logger.info("WebDriver was created successfully");
 
-        LoginPage loginPage = new LoginPage(driver);
-        loginPage.open();
+        AuthenticationService authenticationService =
+                new AuthenticationService(driver);
 
         logger.info("ACTION: Logging in with configured credentials");
 
-        productsPage = loginPage.loginWithCredentials(
-                ConfigReader.get("username"),
-                ConfigReader.get("password")
-        );
+        productsPage = authenticationService.login();
     }
 
     @AfterMethod

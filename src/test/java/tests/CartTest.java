@@ -4,13 +4,12 @@ import base.BaseTest;
 import org.testng.Assert;
 import org.testng.annotations.Test;
 import pages.CartPage;
-import pages.ProductsPage;
+import utils.Constants;
 
 public class CartTest extends BaseTest {
 
     @Test
     public void addBackpackToCartTest() {
-        ProductsPage productsPage = login();
 
         Assert.assertTrue(
                 productsPage.isOpened(),
@@ -21,7 +20,7 @@ public class CartTest extends BaseTest {
 
         Assert.assertEquals(
                 productsPage.getCartItemsCount(),
-                "1",
+                1,
                 "Cart should contain one product after adding backpack"
         );
 
@@ -34,13 +33,13 @@ public class CartTest extends BaseTest {
 
         Assert.assertEquals(
                 cartPage.getPageTitle(),
-                "Your Cart",
+                Constants.CART_TITLE,
                 "Unexpected cart page title"
         );
 
         Assert.assertEquals(
                 cartPage.getProductName(),
-                "Sauce Labs Backpack",
+                Constants.BACKPACK_NAME,
                 "Backpack should be displayed in the cart"
         );
     }

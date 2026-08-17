@@ -1,61 +1,61 @@
 package base;
 
+import driver.DriverFactory;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import pages.LoginPage;
 import pages.ProductsPage;
-import utils.ConfigReader;
-
-import java.time.Duration;
-import java.util.HashMap;
-import java.util.Map;
+import service.AuthenticationService;
 
 public class BaseTest {
 
+    protected final Logger logger = LogManager.getLogger(getClass());
+
     protected WebDriver driver;
+    protected ProductsPage productsPage;
 
     @BeforeMethod
-    public void setUp() {
-        ChromeOptions options = new ChromeOptions();
-
-        options.addArguments("--start-maximized");
-        options.addArguments(
-                "--disable-features=PasswordLeakDetection,PasswordManagerOnboarding"
+    public void setUpAndLogin() {
+        String browser = System.getProperty(
+                "browser",
+                "chrome"
         );
-        options.addArguments("--disable-save-password-bubble");
 
-        Map<String, Object> preferences = new HashMap<>();
-        preferences.put("credentials_enable_service", false);
-        preferences.put("profile.password_manager_enabled", false);
-        preferences.put("profile.password_manager_leak_detection", false);
-
-        options.setExperimentalOption("prefs", preferences);
-
-        driver = new ChromeDriver(options);
-
-        driver.manage()
-                .timeouts()
-                .implicitlyWait(Duration.ofSeconds(3));
-    }
-
-    protected ProductsPage login() {
-        LoginPage loginPage = new LoginPage(driver);
-
-        loginPage.open();
-
-        return loginPage.loginWithCredentials(
-                ConfigReader.get("username"),
-                ConfigReader.get("password")
+        String environment = System.getProperty(
+                "env",
+                "test"
         );
+
+        logger.info(
+                "ACTION: Starting test. Browser: {}, environment: {}",
+                browser,
+                environment
+        );
+
+        DriverFactory.createDriver();
+        driver = DriverFactory.getDriver();
+
+        logger.info("WebDriver was created successfully");
+
+        AuthenticationService authenticationService =
+                new AuthenticationService(driver);
+
+        logger.info("ACTION: Logging in with configured credentials");
+
+        productsPage = authenticationService.login();
     }
 
     @AfterMethod
     public void tearDown() {
-        if (driver != null) {
-            driver.quit();
+        if (DriverFactory.getDriver() != null) {
+            logger.info("ACTION: Closing browser");
+            DriverFactory.quitDriver();
         }
+    }
+
+    public WebDriver getDriver() {
+        return DriverFactory.getDriver();
     }
 }

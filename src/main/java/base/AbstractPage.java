@@ -1,33 +1,56 @@
 package base;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import utils.ConfigurationManager;
+import utils.ElementActions;
+import utils.LoggingElementActions;
+import utils.SeleniumElementActions;
 
 import java.time.Duration;
 
 public abstract class AbstractPage {
 
-    protected WebDriver driver;
-    protected WebDriverWait wait;
+    protected final Logger logger = LogManager.getLogger(getClass());
+
+    protected final WebDriver driver;
+    protected final WebDriverWait wait;
+    protected final ElementActions elementActions;
 
     public AbstractPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+
+        this.wait = new WebDriverWait(
+                driver,
+                Duration.ofSeconds(
+                        Integer.parseInt(
+                                ConfigurationManager.getInstance()
+                                        .get("explicit.wait")
+                        )
+                )
+        );
+
+        this.elementActions = new LoggingElementActions(
+                new SeleniumElementActions()
+        );
 
         PageFactory.initElements(driver, this);
     }
 
-    protected void type(WebElement element, String text){
+    protected void type(WebElement element, String text) {
         wait.until(ExpectedConditions.visibilityOf(element));
-        element.clear();
-        element.sendKeys(text);
+
+        elementActions.type(element, text);
     }
 
-    protected void click(WebElement element){
+    protected void click(WebElement element) {
         wait.until(ExpectedConditions.elementToBeClickable(element));
-        element.click();
+
+        elementActions.click(element);
     }
 }

@@ -40,3 +40,6 @@ build/
 ### IntelliJ ###
 .idea/
 out/
+
+logs/
+screenshots/

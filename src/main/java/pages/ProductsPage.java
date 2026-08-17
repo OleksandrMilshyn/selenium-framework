@@ -6,6 +6,7 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
+import utils.Constants;
 
 import java.util.List;
 
@@ -36,50 +37,51 @@ public class ProductsPage extends AbstractPage {
         super(driver);
     }
 
-    public String getPageTitle() {
-        return pageTitle.getText();
-    }
-
     public boolean isOpened() {
+        wait.until(ExpectedConditions.visibilityOf(pageTitle));
         return pageTitle.isDisplayed();
     }
 
     public void addBackpackToCart() {
+        logger.info("ACTION: Add Backpack to cart");
         click(addBackpackButton);
     }
 
     public void addFirstProductToCart() {
-        click(addToCartButtons.get(0));
+        logger.info("ACTION: Add first product to cart");
+        click(addToCartButtons.get(Constants.FIRST_ELEMENT));
     }
 
-    public String getCartItemsCount() {
-        return wait.until(
-                ExpectedConditions.visibilityOf(cartBadge)
-        ).getText();
+    public int getCartItemsCount() {
+        return Integer.parseInt(
+                wait.until(ExpectedConditions.visibilityOf(cartBadge)).getText()
+        );
     }
 
     public CartPage openCart() {
+        logger.info("ACTION: Open shopping cart");
         click(cartLink);
         return new CartPage(driver);
     }
 
     public void sortByPriceLowToHigh() {
-        Select select = new Select(sortDropdown);
-        select.selectByValue("lohi");
+        logger.info("ACTION: Sort products by price (Low to High)");
 
-        wait.until(
-                ExpectedConditions.attributeToBe(
-                        sortDropdown,
-                        "value",
-                        "lohi"
-                )
-        );
+        Select select = new Select(sortDropdown);
+        select.selectByValue(Constants.SORT_LOW_TO_HIGH);
+
+        wait.until(ExpectedConditions.attributeToBe(
+                sortDropdown,
+                "value",
+                Constants.SORT_LOW_TO_HIGH));
     }
 
     public List<Double> getProductPrices() {
+        logger.info("ACTION: Read product prices");
+
         return productPrices.stream()
                 .map(WebElement::getText)
-                .map(price -> price.replace("$", ""))
+                .map(price -> price.replace(Constants.CURRENCY_SYMBOL, Constants.EMPTY_STRING))
                 .map(Double::parseDouble)
                 .toList();
     }

@@ -1,12 +1,12 @@
 package pages;
 
-import base.AbstractPage;
+import base.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import utils.ConfigurationManager;
 
-public class LoginPage extends AbstractPage {
+public class LoginPage extends BasePage {
 
     @FindBy(id = "user-name")
     private WebElement usernameInput;

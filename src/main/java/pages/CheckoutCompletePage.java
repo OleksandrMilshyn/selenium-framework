@@ -1,12 +1,12 @@
 package pages;
 
-import base.AbstractPage;
+import base.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
-public class CheckoutCompletePage extends AbstractPage {
+public class CheckoutCompletePage extends BasePage {
 
     @FindBy(className = "title")
     private WebElement pageTitle;

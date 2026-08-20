@@ -14,7 +14,7 @@ import utils.SeleniumElementActions;
 
 import java.time.Duration;
 
-public abstract class AbstractPage {
+public abstract class BasePage {
 
     protected final Logger logger = LogManager.getLogger(getClass());
 
@@ -22,7 +22,7 @@ public abstract class AbstractPage {
     protected final WebDriverWait wait;
     protected final ElementActions elementActions;
 
-    public AbstractPage(WebDriver driver) {
+    public BasePage(WebDriver driver) {
         this.driver = driver;
 
         this.wait = new WebDriverWait(

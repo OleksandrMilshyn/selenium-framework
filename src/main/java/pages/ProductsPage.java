@@ -1,6 +1,6 @@
 package pages;
 
-import base.AbstractPage;
+import base.BasePage;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
@@ -10,7 +10,7 @@ import utils.Constants;
 
 import java.util.List;
 
-public class ProductsPage extends AbstractPage {
+public class ProductsPage extends BasePage {
 
     @FindBy(className = "title")
     private WebElement pageTitle;

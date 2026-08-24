@@ -1,11 +1,15 @@
 package listeners;
 
 import base.BaseTest;
+import io.qameta.allure.Allure;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.OutputType;
+import org.openqa.selenium.TakesScreenshot;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
-import utils.ScreenshotUtils;
+
+import java.io.ByteArrayInputStream;
 
 public class TestListener implements ITestListener {
 
@@ -26,6 +30,8 @@ public class TestListener implements ITestListener {
                 "TEST PASSED: {}",
                 result.getMethod().getMethodName()
         );
+
+        attachScreenshot(result);
     }
 
     @Override
@@ -38,39 +44,7 @@ public class TestListener implements ITestListener {
                 result.getThrowable()
         );
 
-        Object testInstance = result.getInstance();
-
-        if (!(testInstance instanceof BaseTest baseTest)) {
-            logger.error(
-                    "Screenshot was not created because the test does not extend BaseTest"
-            );
-            return;
-        }
-
-        if (baseTest.getDriver() == null) {
-            logger.error(
-                    "Screenshot was not created because WebDriver is null"
-            );
-            return;
-        }
-
-        try {
-            String screenshotPath = ScreenshotUtils.takeScreenshot(
-                    baseTest.getDriver(),
-                    testName
-            );
-
-            logger.error(
-                    "Screenshot saved: {}",
-                    screenshotPath
-            );
-        } catch (RuntimeException e) {
-            logger.error(
-                    "Failed to create screenshot for test: {}",
-                    testName,
-                    e
-            );
-        }
+        attachScreenshot(result);
     }
 
     @Override
@@ -79,5 +53,47 @@ public class TestListener implements ITestListener {
                 "TEST SKIPPED: {}",
                 result.getMethod().getMethodName()
         );
+    }
+
+    private void attachScreenshot(ITestResult result) {
+        Object testInstance = result.getInstance();
+
+        if (!(testInstance instanceof BaseTest baseTest)) {
+            logger.error(
+                    "Screenshot was not attached because the test does not extend BaseTest"
+            );
+            return;
+        }
+
+        if (baseTest.getDriver() == null) {
+            logger.error(
+                    "Screenshot was not attached because WebDriver is null"
+            );
+            return;
+        }
+
+        try {
+            byte[] screenshot = ((TakesScreenshot) baseTest.getDriver())
+                    .getScreenshotAs(OutputType.BYTES);
+
+            Allure.addAttachment(
+                    "Screenshot",
+                    "image/png",
+                    new ByteArrayInputStream(screenshot),
+                    ".png"
+            );
+
+            logger.info(
+                    "Screenshot attached to Allure report: {}",
+                    result.getMethod().getMethodName()
+            );
+
+        } catch (RuntimeException e) {
+            logger.error(
+                    "Failed to attach screenshot for test: {}",
+                    result.getMethod().getMethodName(),
+                    e
+            );
+        }
     }
 }

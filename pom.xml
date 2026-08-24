@@ -67,6 +67,13 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>io.qameta.allure</groupId>
+            <artifactId>allure-testng</artifactId>
+            <version>2.35.3</version>
+            <scope>test</scope>
+        </dependency>
+
     </dependencies>
 
     <build>

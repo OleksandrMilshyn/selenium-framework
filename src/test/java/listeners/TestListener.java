@@ -59,7 +59,7 @@ public class TestListener implements ITestListener {
         Object testInstance = result.getInstance();
 
         if (!(testInstance instanceof BaseTest baseTest)) {
-            logger.error(
+            logger.info(
                     "Screenshot was not attached because the test does not extend BaseTest"
             );
             return;

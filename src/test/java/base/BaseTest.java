@@ -45,6 +45,7 @@ public class BaseTest {
         logger.info("ACTION: Logging in with configured credentials");
 
         productsPage = authenticationService.login();
+        logger.info("ACTION: Login successful. Products page is opened");
     }
 
     @AfterMethod

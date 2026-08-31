@@ -16,6 +16,7 @@
             <class name="tests.CartTest"/>
             <class name="tests.CheckoutTest"/>
             <class name="tests.ProductSortingTest"/>
+            <class name="runners.CucumberTestRunner"/>
         </classes>
     </test>
 

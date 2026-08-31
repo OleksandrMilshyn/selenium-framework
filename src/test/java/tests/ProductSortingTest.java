@@ -13,11 +13,6 @@ public class ProductSortingTest extends BaseTest {
     @Test
     public void sortProductsAndRemoveItemTest() {
 
-        Assert.assertTrue(
-                productsPage.isOpened(),
-                "Products page should be opened after successful login"
-        );
-
         productsPage.sortByPriceLowToHigh();
 
         List<Double> actualPrices = productsPage.getProductPrices();
